@@ -8,11 +8,19 @@ from selenium.webdriver.common.keys import Keys
 import time
 from selenium.common.exceptions import ElementClickInterceptedException, StaleElementReferenceException
 
+texto_nota = 'Olá! Me chamo Osmário. Encontrei seu perfil com um código em Selenium que desenvolvi. Estou buscando estágio em TI e adoraria me conectar para trocar ideias. Abraços!'
+
+
 # Solicita o email do usuário
-nome_usuario = input("Digite o seu email de usuário: ") 
+#nome_usuario = input("Digite o seu email de usuário: ") 
 # Solicita a senha do usuário
-senha_usuario = input("Digite sua senha de usuário: ") 
+#senha_usuario = input("Digite sua senha de usuário: ") 
 # Solicita a quantidade de convites que deseja enviar
+nome_usuario = 'osmarioslfilho@gmail.com'
+senha_usuario = 'Futebol 9'
+
+
+
 quantidade_convites = int(input('Digite a quantidade de convites que deseja ser enviado: '))
 #faz uma pesquisa personalizada
 print('Você tem duas opções de escolha. A primeira é mais focada em recrutadores de TI, a segunda é em pesquisadores no geral')
@@ -54,12 +62,8 @@ navegador.find_element(By.XPATH , '//*[@id="password"]').send_keys(senha_usuario
 # Clica no botão de login
 navegador.find_element(By.XPATH , '//*[@id="organic-div"]/form/div[4]/button').click()
 
-# Acessa a área de conexões
-area_conexao = navegador.find_element(By.XPATH , '//*[@id="global-nav"]/div/nav/ul/li[2]/a')
-area_conexao.click()
-
 # Procura a barra de notificaçao
-achar_barra_de_pesquisa = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="root"]/div[3]/div[1]/header/div/div/div[1]/div/input')))
+achar_barra_de_pesquisa = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="global-nav-typeahead"]/input')))
 achar_barra_de_pesquisa.click()
 achar_barra_de_pesquisa.send_keys(pesquisa_personalizada + Keys.ENTER)
 
@@ -95,14 +99,31 @@ while contador_convites < quantidade_convites:
                     # Rola a página até o botão para garantir que esteja visível
                     navegador.execute_script("arguments[0].scrollIntoView({block: 'center'});", botao)
                     time.sleep(0.5)  # Pequena pausa para estabilidade
+                    
                     # Clica no botão "Conectar"
                     botao.click()
-                    print("Convite numero " + str(contador_convites) + " enviado!")
+                    time.sleep(1)  # Aguarda o modal abrir
+                    
+                    # Clica no botão "Adicionar nota"
+                    botao_adicionar_nota = wait.until(EC.element_to_be_clickable((By.XPATH, '//button[contains(., "Adicionar nota")]')))
+                    botao_adicionar_nota.click()
+                    
+                    # Aguarda o campo de mensagem aparecer e insere o texto
+                    adicionar_texto = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="custom-message"]')))
+                    adicionar_texto.clear()
+                    adicionar_texto.send_keys(texto_nota)
+                    
+                    # Clica no botão "Enviar"
+                    enviar_convite = wait.until(EC.element_to_be_clickable((By.XPATH, '//button[contains(., "Enviar")]')))
+                    enviar_convite.click()
+                    
+                    print("Convite número " + str(contador_convites) + " enviado!")
                     time.sleep(1)  # Pausa para evitar bloqueios por ações muito rápidas
+
                 except (ElementClickInterceptedException, StaleElementReferenceException) as e:
-                    # Caso não consiga clicar, exibe o erro e continua para o próximo botão
-                    print(f"Erro ao clicar no botão: {e}, pulando.")
+                    print(f"Erro ao clicar no botão ou enviar nota: {e}, pulando.")
                     continue
+
             else:
                 # Sai do loop se já enviou a quantidade desejada de convites
                 break
