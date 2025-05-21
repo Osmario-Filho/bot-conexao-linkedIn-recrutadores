@@ -12,12 +12,10 @@ texto_nota = 'Olá! Me chamo Osmário. Encontrei seu perfil com um código em Se
 
 
 # Solicita o email do usuário
-#nome_usuario = input("Digite o seu email de usuário: ") 
+nome_usuario = input("Digite o seu email de usuário: ") 
 # Solicita a senha do usuário
-#senha_usuario = input("Digite sua senha de usuário: ") 
+senha_usuario = input("Digite sua senha de usuário: ") 
 # Solicita a quantidade de convites que deseja enviar
-nome_usuario = 'osmarioslfilho@gmail.com'
-senha_usuario = 'Futebol 9'
 
 
 
